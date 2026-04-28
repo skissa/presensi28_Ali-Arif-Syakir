@@ -1,373 +1,342 @@
-:root {
-  --bg: #0f1117;
-  --surface: #1a1d27;
-  --surface2: #222535;
-  --border: #2e3248;
-  --accent: #6c63ff;
-  --accent2: #a78bfa;
-  --success: #10b981;
-  --danger: #ef4444;
-  --text: #e2e8f0;
-  --muted: #64748b;
-  --radius: 14px;
-}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dark Mode CRUD Interface</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <style>
+    /* =========================================
+       1. VARIABEL & TEMA DASAR
+       ========================================= */
+    :root {
+      /* Palet warna Dark Mode dengan aksen ungu */
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #222535;
+      --border: #2e3248;
+      --accent: #6c63ff;
+      --accent2: #a78bfa;
+      --success: #10b981;
+      --danger: #ef4444;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --radius: 14px;
+    }
 
-body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  padding: 40px 20px;
-  background-image:
-    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(108,99,255,0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 50% at 80% 80%, rgba(167,139,250,0.08) 0%, transparent 60%);
-}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 420px 1fr;
-  gap: 28px;
-  align-items: start;
-}
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px 20px;
+      /* Efek pendaran cahaya (glow) ungu halus di background */
+      background-image:
+        radial-gradient(ellipse 60% 40% at 20% 10%, rgba(108,99,255,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 80% 80%, rgba(167,139,250,0.08) 0%, transparent 60%);
+    }
 
-/* ── FORM PANEL ── */
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
+    /* =========================================
+       2. LAYOUT UTAMA (GRID)
+       ========================================= */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      /* Membagi layar: Kiri 420px (Form), Kanan sisanya (Tabel) */
+      grid-template-columns: 420px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
 
-.panel-header {
-  padding: 22px 28px 18px;
-  border-bottom: 1px solid var(--border);
-  background: linear-gradient(135deg, rgba(108,99,255,0.15) 0%, transparent 80%);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+    /* =========================================
+       3. PANEL FORM INPUT (KIRI)
+       ========================================= */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
 
-.panel-header .icon {
-  width: 38px; height: 38px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-}
+    .panel-header {
+      padding: 22px 28px 18px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(108,99,255,0.15) 0%, transparent 80%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-.panel-header h2 {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
-  color: #fff;
-}
+    .panel-header .icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
 
-.panel-header p {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 2px;
-}
+    .panel-header h2 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; }
+    .panel-header p { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
-.form-body {
-  padding: 24px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+    .form-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    
+    label {
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.8px;
+    }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+    /* Styling input text dan textarea dengan efek nyala saat di-klik (focus) */
+    input[type="text"], textarea, select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: inherit; font-size: 14px; padding: 11px 14px;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none; width: 100%;
+    }
 
-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-}
+    input[type="text"]:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.18);
+    }
 
-input[type="text"], textarea, select {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--text);
-  font-family: inherit;
-  font-size: 14px;
-  padding: 11px 14px;
-  transition: border-color .2s, box-shadow .2s;
-  outline: none;
-  width: 100%;
-}
+    textarea { resize: vertical; min-height: 80px; }
+    select option { background: var(--surface2); }
+    .date-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 
-input[type="text"]:focus, textarea:focus, select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(108,99,255,0.18);
-}
+    /* Custom Radio Button: Menyembunyikan bulatannya dan diganti desain kotak */
+    .radio-group { display: flex; gap: 12px; }
+    .radio-label {
+      display: flex; align-items: center; gap: 8px; padding: 10px 16px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 500;
+      transition: border-color .2s, background .2s; flex: 1; justify-content: center;
+    }
+    .radio-label:has(input:checked) {
+      border-color: var(--accent); background: rgba(108,99,255,0.12); color: var(--accent2);
+    }
+    .radio-label input { display: none; }
 
-textarea { resize: vertical; min-height: 80px; }
+    /* =========================================
+       4. TOMBOL (BUTTONS)
+       ========================================= */
+    .btn-row { display: flex; gap: 10px; margin-top: 4px; }
+    .btn {
+      flex: 1; padding: 12px; border: none; border-radius: 10px;
+      font-family: inherit; font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: transform .15s, filter .15s, box-shadow .15s;
+      letter-spacing: 0.3px;
+    }
+    .btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
 
-select option { background: var(--surface2); }
+    .btn-submit {
+      background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+      color: #fff; box-shadow: 0 4px 16px rgba(16,185,129,0.3);
+    }
+    .btn-reset {
+      background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+      color: #fff; box-shadow: 0 4px 16px rgba(239,68,68,0.25);
+      flex: 0 0 auto; padding: 12px 20px;
+    }
 
-.date-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px;
-}
+    /* Mode Edit: Bar kuning dan tombol berubah jadi oranye */
+    .edit-mode-bar {
+      display: none; background: rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.35); border-radius: 10px;
+      padding: 10px 14px; font-size: 12px; font-weight: 600; color: #fbbf24;
+      align-items: center; gap: 8px;
+    }
+    .edit-mode-bar.active { display: flex; }
+    .edit-mode-bar .cancel-edit {
+      margin-left: auto; cursor: pointer; background: rgba(245,158,11,0.2);
+      border: none; color: #fbbf24; border-radius: 6px; padding: 3px 10px;
+      font-size: 11px; font-weight: 700; font-family: inherit;
+    }
+    .edit-mode-bar .cancel-edit:hover { background: rgba(245,158,11,0.35); }
+    .btn-submit.editing {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      box-shadow: 0 4px 16px rgba(245,158,11,0.3);
+    }
 
-/* radio */
-.radio-group {
-  display: flex;
-  gap: 12px;
-}
+    /* =========================================
+       5. NOTIFIKASI TOAST (POP-UP)
+       ========================================= */
+    .toast {
+      position: fixed; top: 24px; right: 24px; background: var(--success);
+      color: #fff; padding: 12px 20px; border-radius: 10px;
+      font-size: 13px; font-weight: 600; opacity: 0;
+      transform: translateY(-10px); transition: opacity .3s, transform .3s;
+      pointer-events: none; z-index: 999;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.error { background: var(--danger); }
 
-.radio-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  transition: border-color .2s, background .2s;
-  flex: 1;
-  justify-content: center;
-}
+    /* =========================================
+       6. PANEL TABEL (KANAN)
+       ========================================= */
+    .table-panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .table-header {
+      padding: 22px 28px 18px; border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(108,99,255,0.1) 0%, transparent 80%);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .table-header h2 { font-size: 18px; font-weight: 700; color: #fff; }
+    
+    .badge {
+      background: rgba(108,99,255,0.2); border: 1px solid rgba(108,99,255,0.4);
+      color: var(--accent2); font-size: 11px; font-weight: 700;
+      padding: 3px 10px; border-radius: 999px; font-family: 'JetBrains Mono', monospace;
+    }
 
-.radio-label:has(input:checked) {
-  border-color: var(--accent);
-  background: rgba(108,99,255,0.12);
-  color: var(--accent2);
-}
+    .table-wrap { overflow-x: auto; padding: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th {
+      padding: 13px 16px; text-align: left; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted);
+      background: var(--surface2); border-bottom: 1px solid var(--border);
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(108,99,255,0.06); } /* Efek sorot saat kursor di baris tabel */
+    td { padding: 12px 16px; vertical-align: middle; }
 
-.radio-label input { display: none; }
+    /* Visual Data di Tabel */
+    .nim-cell { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--accent2); }
+    .jk-badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+    .jk-L { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+    .jk-P { background: rgba(236,72,153,0.15); color: #f472b6; border: 1px solid rgba(236,72,153,0.3); }
 
-/* buttons */
-.btn-row {
-  display: flex;
-  gap: 10px;
-  margin-top: 4px;
-}
+    /* Tombol Aksi (Edit/Hapus) */
+    .action-btn {
+      padding: 5px 12px; border: none; border-radius: 7px;
+      font-family: inherit; font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: filter .15s, transform .1s;
+    }
+    .action-btn:hover { filter: brightness(1.2); transform: scale(1.05); }
+    .btn-delete { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .btn-edit { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); margin-right: 6px; }
 
-.btn {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform .15s, filter .15s, box-shadow .15s;
-  letter-spacing: 0.3px;
-}
+    .empty-state { padding: 60px 20px; text-align: center; color: var(--muted); font-size: 13px; }
+    .empty-state .emoji { font-size: 40px; margin-bottom: 12px; }
+    .empty-state p { line-height: 1.5; }
 
-.btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-.btn:active { transform: translateY(0); }
+    /* =========================================
+       7. RESPONSIVE MOBILE
+       ========================================= */
+    @media (max-width: 800px) {
+      /* Jika layar sempit, kolom patah jadi 1 baris atas-bawah */
+      .container { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
 
-.btn-submit {
-  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(16,185,129,0.3);
-}
+  <div class="toast" id="toast">Data berhasil disimpan!</div>
 
-.btn-reset {
-  background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(239,68,68,0.25);
-  flex: 0 0 auto;
-  padding: 12px 20px;
-}
+  <div class="container">
+    
+    <div class="panel">
+      <div class="panel-header">
+        <div class="icon">📝</div>
+        <div>
+          <h2>Data Mahasiswa</h2>
+          <p>Masukkan data pendaftaran baru</p>
+        </div>
+      </div>
 
-/* toast */
-.toast {
-  position: fixed;
-  top: 24px; right: 24px;
-  background: var(--success);
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity .3s, transform .3s;
-  pointer-events: none;
-  z-index: 999;
-}
+      <div class="form-body">
+        <div class="edit-mode-bar">
+          <span>⚠️ Sedang mengubah data</span>
+          <button class="cancel-edit">Batal</button>
+        </div>
 
-.toast.show { opacity: 1; transform: translateY(0); }
-.toast.error { background: var(--danger); }
+        <div class="field">
+          <label>NIM</label>
+          <input type="text" placeholder="Masukkan NIM">
+        </div>
 
-/* ── TABLE PANEL ── */
-.table-panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
+        <div class="field">
+          <label>Nama Lengkap</label>
+          <input type="text" placeholder="Masukkan nama lengkap">
+        </div>
 
-.table-header {
-  padding: 22px 28px 18px;
-  border-bottom: 1px solid var(--border);
-  background: linear-gradient(135deg, rgba(108,99,255,0.1) 0%, transparent 80%);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+        <div class="field">
+          <label>Jenis Kelamin</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="jk" value="L"> Laki-laki
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="jk" value="P"> Perempuan
+            </label>
+          </div>
+        </div>
 
-.table-header h2 {
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-}
+        <div class="field">
+          <label>Alamat</label>
+          <textarea placeholder="Masukkan alamat lengkap"></textarea>
+        </div>
 
-.badge {
-  background: rgba(108,99,255,0.2);
-  border: 1px solid rgba(108,99,255,0.4);
-  color: var(--accent2);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-family: 'JetBrains Mono', monospace;
-}
+        <div class="btn-row">
+          <button class="btn btn-reset">Reset</button>
+          <button class="btn btn-submit">Simpan Data</button>
+        </div>
+      </div>
+    </div>
 
-.table-wrap {
-  overflow-x: auto;
-  padding: 0;
-}
+    <div class="table-panel">
+      <div class="table-header">
+        <h2>Daftar Mahasiswa</h2>
+        <span class="badge">2 Data</span>
+      </div>
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>NIM</th>
+              <th>Nama</th>
+              <th>L/P</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="nim-cell">10123001</td>
+              <td>Budi Santoso</td>
+              <td><span class="jk-badge jk-L">L</span></td>
+              <td>
+                <button class="action-btn btn-edit">Edit</button>
+                <button class="action-btn btn-delete">Hapus</button>
+              </td>
+            </tr>
+            <tr>
+              <td class="nim-cell">10123002</td>
+              <td>Siti Aminah</td>
+              <td><span class="jk-badge jk-P">P</span></td>
+              <td>
+                <button class="action-btn btn-edit">Edit</button>
+                <button class="action-btn btn-delete">Hapus</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        </div>
+    </div>
 
-thead th {
-  padding: 13px 16px;
-  text-align: left;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--muted);
-  background: var(--surface2);
-  border-bottom: 1px solid var(--border);
-}
+  </div>
 
-tbody tr {
-  border-bottom: 1px solid var(--border);
-  transition: background .15s;
-}
-
-tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: rgba(108,99,255,0.06); }
-
-td {
-  padding: 12px 16px;
-  vertical-align: middle;
-}
-
-.nim-cell {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--accent2);
-}
-
-.jk-badge {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.jk-L { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
-.jk-P { background: rgba(236,72,153,0.15); color: #f472b6; border: 1px solid rgba(236,72,153,0.3); }
-
-.action-btn {
-  padding: 5px 12px;
-  border: none;
-  border-radius: 7px;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: filter .15s, transform .1s;
-}
-
-.action-btn:hover { filter: brightness(1.2); transform: scale(1.05); }
-
-.btn-delete {
-  background: rgba(239,68,68,0.15);
-  color: #f87171;
-  border: 1px solid rgba(239,68,68,0.3);
-}
-
-.btn-edit {
-  background: rgba(245,158,11,0.15);
-  color: #fbbf24;
-  border: 1px solid rgba(245,158,11,0.3);
-  margin-right: 6px;
-}
-
-/* edit mode indicator on form */
-.edit-mode-bar {
-  display: none;
-  background: rgba(245,158,11,0.12);
-  border: 1px solid rgba(245,158,11,0.35);
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #fbbf24;
-  align-items: center;
-  gap: 8px;
-}
-
-.edit-mode-bar.active { display: flex; }
-
-.edit-mode-bar .cancel-edit {
-  margin-left: auto;
-  cursor: pointer;
-  background: rgba(245,158,11,0.2);
-  border: none;
-  color: #fbbf24;
-  border-radius: 6px;
-  padding: 3px 10px;
-  font-size: 11px;
-  font-weight: 700;
-  font-family: inherit;
-}
-
-.edit-mode-bar .cancel-edit:hover { background: rgba(245,158,11,0.35); }
-
-.btn-submit.editing {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  box-shadow: 0 4px 16px rgba(245,158,11,0.3);
-}
-
-.empty-state {
-  padding: 60px 20px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.empty-state .emoji { font-size: 40px; margin-bottom: 12px; }
-.empty-state p { line-height: 1.5; }
-
-@media (max-width: 800px) {
-  .container { grid-template-columns: 1fr; }
-}
+</body>
+</html>
